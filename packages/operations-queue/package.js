@@ -8,13 +8,13 @@ Package.describe({
 
 Package.onUse(function(api) {
 	api.versionsFrom('1.2.0.2');
-	api.use(['ecmascript', 'underscore', 'convexset:package-utils@0.1.0']);
-	api.addFiles(['operations-queue.js']);
+	api.use(['ecmascript', 'underscore', 'convexset:package-utils@0.1.0'], 'client');
+	api.addFiles(['operations-queue.js'], 'client');
     api.export('OperationsQueue');
 });
 
 Package.onTest(function(api) {
 	api.use(['tinytest', 'test-helpers']);
-	api.use(['ecmascript', 'underscore', 'convexset:operations-queue']);
+	api.use(['ecmascript', 'underscore', 'convexset:operations-queue'], 'client');
 	api.addFiles(['tests.js'], ['client']);
 });
