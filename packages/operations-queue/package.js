@@ -10,11 +10,11 @@ Package.onUse(function(api) {
 	api.versionsFrom('1.2.0.2');
 	api.use(['ecmascript', 'underscore', 'convexset:package-utils@0.1.0'], 'client');
 	api.addFiles(['operations-queue.js'], 'client');
-    api.export('OperationsQueue');
+    api.export('OperationsQueue', 'client');
 });
 
 Package.onTest(function(api) {
-	api.use(['tinytest', 'test-helpers']);
+	api.use(['tinytest', 'test-helpers'], 'client');
 	api.use(['ecmascript', 'underscore', 'convexset:operations-queue'], 'client');
-	api.addFiles(['tests.js'], ['client']);
+	api.addFiles(['tests.js'], 'client');
 });
