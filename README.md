@@ -6,7 +6,7 @@ This is probably easier to explain by example. Consider a "file uploader" where 
  - Each hash task is a pre-requisite to the corresponding upload task (tasks may have zero or more pre-requisites)
  - The queue might have a resource availability description of `{hash: 1, upload: 3}`
  - Each hash task holds 1 `"hash"` item (and releases it on completion)
- - Each upload task consumes 1 `"upload"` item (and releases it on completion)
+ - Each upload task holds 1 `"upload"` item (and releases it on completion)
 
 ## Install
 
