@@ -8,6 +8,22 @@ This is probably easier to explain by example. Consider a "file uploader" where 
  - Each hash task holds 1 `"hash"` item (and releases it on completion)
  - Each upload task holds 1 `"upload"` item (and releases it on completion)
 
+## Table of Contents
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+- [Install](#install)
+- [Usage By Example](#usage-by-example)
+    - [Constructor](#constructor)
+    - [Task Creation](#task-creation)
+    - [Starting/Aborting](#startingaborting)
+    - ["Visibility"](#visibility)
+    - [Debug](#debug)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Install
 
 This is available as [`convexset:operations-queue`](https://atmospherejs.com/convexset/operations-queue) on [Atmosphere](https://atmospherejs.com/). (Install with `meteor add convexset:operations-queue`.)
