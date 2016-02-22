@@ -34,14 +34,16 @@ This is available as [`convexset:operations-queue`](https://atmospherejs.com/con
 ```javascript
 var opsQueue = new OperationsQueue({
     availableResources: {
-        resource_a: 5
-        resource_b: 10
+        resource_a: 5,
+        resource_b: 10,
         resource_c: 5
     },
     singleTaskCompletionCallBack: function(tId, result) {
         // When a single task is done
+        var info = opsQueue.getTaskData();
         console.log("[" + tId + "] Completed. Result", result);
-        console.log("[" + tId + "] Task Duration: " + (taskCompletionTime[tId] - taskStartTime[tId]) + "ms.");
+        console.log("[" + tId + "] Task Duration: " + (info.taskCompletionTime[tId] - info.taskStartTime[tId]) + "ms.");
+taskStartTime[tId]) + "ms.");
     },
     terminationCallBack: function(completed, incomplete) {
         // When all done
@@ -50,8 +52,8 @@ var opsQueue = new OperationsQueue({
         console.log("Incomplete:", incomplete);
     },
     // ... in milliseconds
-    sleep_period_between_task_starts: 0
-    show_debug_output: false;
+    sleep_period_between_task_starts: 0,
+    show_debug_output: false
 });
 ```
 
@@ -71,7 +73,7 @@ var tId = opsQueue.createTask({
     taskCompletionCallBack: function(return_value) {
         console.log("[" + this.name + "] Default callback: Task complete with output ", return_value);
     },
-    taskDependencies: [taskId1, taskId2, taskId2]
+    taskDependencies: [taskId1, taskId2, taskId2],
     // Note that the output of pre-requisites are passed into the task function in order
     task: function(arg1, arg2, arg3) {
         // ....
@@ -94,7 +96,7 @@ var tId = opsQueue.createTask({
     taskCompletionCallBack: function(return_value) {
         console.log("[" + this.name + "] Default callback: Task complete with output ", return_value);
     },
-    taskDependencies: [taskId1, taskId2, taskId2]
+    taskDependencies: [taskId1, taskId2, taskId2],
     // Note that the output of pre-requisites are passed into the task function in order
     task: function(arg1, arg2, arg3) {
         // Asynchronous tasks require a function that returns a promise that does the work asynchronously (when it is created)
