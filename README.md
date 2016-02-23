@@ -1,6 +1,6 @@
 # OperationsQueue
 
-A client-side task queue (packaged for Meteor) for tasks with pre-requisites and resource requirements.
+A task queue for orchestrating tasks with pre-requisites and resource requirements.
 
 This is probably easier to explain by example. Consider a "file uploader" where each file has to be hashed (and the hash stored) and uploaded only after hashing. However to avoid locking up the UI, there can be at most one hashing task (done progressively), and at most three simultaneous uploads (for whatever reason). This can be readily achieved within the `OperationsQueue` framework:
  - Each hash task is a pre-requisite to the corresponding upload task (tasks may have zero or more pre-requisites)
@@ -15,6 +15,8 @@ This is probably easier to explain by example. Consider a "file uploader" where 
 
 
 - [Install](#install)
+  - [Meteor Package](#meteor-package)
+  - [npm Package](#npm-package)
 - [Usage By Example](#usage-by-example)
     - [Constructor](#constructor)
     - [Task Creation](#task-creation)
@@ -26,7 +28,13 @@ This is probably easier to explain by example. Consider a "file uploader" where 
 
 ## Install
 
+### Meteor Package
+
 This is available as [`convexset:operations-queue`](https://atmospherejs.com/convexset/operations-queue) on [Atmosphere](https://atmospherejs.com/). (Install with `meteor add convexset:operations-queue`.)
+
+### npm Package
+
+... also available as [`operations-queue`](https://www.npmjs.com/package/operations-queue) on [npm](https://www.npmjs.com/). (Install with `npm install operations-queue`.)
 
 ## Usage By Example
 
