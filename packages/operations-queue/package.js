@@ -1,6 +1,6 @@
 Package.describe({
 	name: 'convexset:operations-queue',
-	version: '0.1.1',
+	version: '0.1.2',
 	summary: 'A client-side task queue for tasks with pre-requisites and resource requirements',
 	git: 'https://github.com/convexset/meteor-operations-queue',
 	documentation: '../../README.md'

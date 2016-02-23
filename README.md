@@ -64,8 +64,6 @@ Here is an example of a synchronous task:
 ```javascript
 var tId = opsQueue.createTask({
     name: "Name of Task",
-    // Whether task is synchronous, actually defaults to true
-    is_synchronous: true,  
     // Priority: higher => higher priority (defaults to 5)
     priority: 5,
     // Resource use. Example: {forklift: 1, driver: 1}
@@ -87,8 +85,6 @@ Here is an example of an asynchronous task:
 ```javascript
 var tId = opsQueue.createTask({
     name: "Name of Task",
-    // Whether task is synchronous, actually defaults to true
-    is_synchronous: false,  
     // Priority: higher => higher priority (defaults to 5)
     priority: 5,
     // Resource use. Example: {forklift: 1, driver: 1}
@@ -107,7 +103,8 @@ var tId = opsQueue.createTask({
 });
 ```
 
-**Note: while synchronous tasks return results "straight" results (like `function() {return 5;}` returns 5), but asynchronous tasks have results wrapped as `{result: ..., error: ...}` (on resolve, `.result` is set and `.error` is set to null; on reject, `.error` is set and `.result` is set to null). So a result passed through from an asynchronous task should be accessed via `arg.result` (after checking for `arg.error`).**
+**Note: all tasks have results wrapped as `{result: ..., error: ...}`. For synchronous tasks, for completion without exceptions being thrown up to `OperationsQueue`, `result` is defined by the return value, and `error` is left undefined; otherwise, `result` is left undefined and `error` is set to the uncaught exception.
+For promises, on resolve, `.result` is set and `.error` is left undefined; on reject, `.error` is set and `.result` is left undefined. So a result passed through from an asynchronous task should be accessed via `arg.result` (after checking for `arg.error`).**
 
 #### Starting/Aborting
 

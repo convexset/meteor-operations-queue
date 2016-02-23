@@ -19,9 +19,9 @@ function mapAndSortAscending(o) {
 }
 
 function checkOutput(name, test, expectedOutput) {
-	return function(result) {
+	return function(output) {
 		// Figure out what to check
-		var thingToCheck = (result instanceof Object && result.hasOwnProperty('result') && result.hasOwnProperty('error')) ? result.result : result;
+		var thingToCheck = output.result;
 		if (thingToCheck !== expectedOutput) {
 			console.log("[Failed] (" + name + ") Expected:", expectedOutput, " | Actual: ", thingToCheck);
 		}
@@ -173,11 +173,10 @@ testAsyncMulti('[OperationsQueue] Completion, Precedences and Resource Feasibili
 				task: function(a, b) {
 					return new Promise(function(resolve) {
 						setTimeout(function() {
-							resolve(a + b);
+							resolve(a.result + b.result);
 						}, 10);
 					});
 				},
-				is_synchronous: false,
 				taskCompletionCallBack: expect(checkOutput("t2", test, 11))
 			});
 			precedences.push({
@@ -213,8 +212,8 @@ testAsyncMulti('[OperationsQueue] Completion, Precedences and Resource Feasibili
 				priority: 7,
 				resourceUse: resUse,
 				taskDependencies: deps,
-				task: function(a_async, b) {
-					return a_async.result + b;
+				task: function(a, b) {
+					return a.result + b.result;
 				},
 				taskCompletionCallBack: expect(checkOutput("t3", test, 111))
 			});
@@ -231,6 +230,7 @@ testAsyncMulti('[OperationsQueue] Completion, Precedences and Resource Feasibili
 		var taskIdsCoupled = {};
 		var taskName;
 		var item;
+		var task;
 
 		for (var line = 1; line <= NUM_LINES; line++) {
 			taskIdsSerialLines[line] = {};
@@ -242,18 +242,25 @@ testAsyncMulti('[OperationsQueue] Completion, Precedences and Resource Feasibili
 				};
 				deps = item === 1 ? [] : [taskIdsSerialLines[line][item - 1]];
 				taskName = "S-" + line + "-" + item;
+
+				if (item === 1) {
+					task = (function(x) {
+						return function() {
+							return x;
+						};
+					})(line);
+				} else {
+					task = function(a) {
+						return a.result;
+					};
+				}
+
 				taskIdsSerialLines[line][item] = opsQueue.createTask({
 					name: taskName,
 					priority: 2 + Math.floor(Math.random() * 8),
 					resourceUse: resUse,
 					taskDependencies: deps,
-					task: item === 1 ? (function(x) {
-						return function() {
-							return x;
-						};
-					})(line) : function(a) {
-						return a;
-					},
+					task: task,
 					taskCompletionCallBack: (function(ln) {
 						return expect(checkOutput(taskName, test, ln));
 					})(line)
@@ -269,8 +276,6 @@ testAsyncMulti('[OperationsQueue] Completion, Precedences and Resource Feasibili
 
 		var NUM_ROWS = 7;
 		var NUM_ROW_ITEMS = 7;
-		var task;
-		var is_synchronous;
 
 		for (var row = 1; row <= NUM_ROWS; row++) {
 			taskIdsCoupled[row] = {};
@@ -307,7 +312,6 @@ testAsyncMulti('[OperationsQueue] Completion, Precedences and Resource Feasibili
 
 				if (Math.random() < 0.8) {
 					// Synchronous task
-					is_synchronous = true;
 					task = (function(x) {
 						return function() {
 							return x;
@@ -315,7 +319,6 @@ testAsyncMulti('[OperationsQueue] Completion, Precedences and Resource Feasibili
 					})(taskName);
 				} else {
 					// Asynchronous task
-					is_synchronous = false;
 					task = (function(x) {
 						return function() {
 							return new Promise(function(resolve) {
@@ -333,7 +336,6 @@ testAsyncMulti('[OperationsQueue] Completion, Precedences and Resource Feasibili
 					resourceUse: resUse,
 					taskDependencies: deps,
 					task: task,
-					is_synchronous: is_synchronous,
 					taskCompletionCallBack: (function(ans) {
 						return expect(checkOutput(taskName, test, ans));
 					})(taskName)

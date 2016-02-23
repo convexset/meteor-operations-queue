@@ -119,7 +119,6 @@ OperationsQueue = (function(undefined) {
 		});
 
 
-
 		// Get dictionary of available resources
 		function getAvailableResources() {
 			return _.extend({}, availableResources);
@@ -209,7 +208,7 @@ OperationsQueue = (function(undefined) {
 			// Check taskOptions.taskDependencies
 			//  - type
 			//  - existence of task IDs
-			if (!(taskOptions.taskDependencies instanceof Array)) {
+			if (!_.isArray(taskOptions.taskDependencies)) {
 				throw "invalid-task-dependencies";
 			}
 			for (var i = 0; i < taskOptions.taskDependencies.length; i++) {
@@ -471,49 +470,47 @@ OperationsQueue = (function(undefined) {
 						return taskSequences[k].output;
 					});
 
-					if (taskSequences[taskId].is_synchronous) {
-						// Synchronous Task
-						if (options.show_debug_output) {
-							console.log('Starting Synchronous Task');
-						}
-						// ... do it!! (Please pre-bind functions)
-						return_value = taskSequences[taskId].task.apply({}, inputArray);
+					// Synchronous Task
+					if (options.show_debug_output) {
+						console.log('Starting Task');
+					}
+					// ... do it!! (Please pre-bind functions)
+					// return_value = taskSequences[taskId].task.apply({}, inputArray);
+					var result;
+					try {
+						result = taskSequences[taskId].task.apply({}, inputArray);
+						return_value = {
+							result: result
+						};
+					} catch (e) {
+						return_value = {
+							error: e
+						};
+					}
 
-						// Check if a likely error was committed
-						if (return_value instanceof Promise) {
-							// If return_value is a Promise, instructions were
-							// not followed. Abort and throw.
-							status = STATUS_ABORTED;
-							throw "synchronous-task-should-not-return-a-promise: Aborting.";
-						}
-
-						taskSequences[taskId].output = return_value;
-						cleanUp();
-					} else {
-						// If task returns a promise
-						if (options.show_debug_output) {
-							console.log('Starting Promise-y Task');
-						}
-						var thisPromise = taskSequences[taskId].task.apply({}, inputArray);
-						// ... append call back to extract return value
-						thisPromise
+					// Check if a likely error was committed
+					if (result instanceof Promise) {
+						// asynchronous task
+						return_value = null;
+						result
 							.then(function setReturnValueAndCleanUp(result) {
 								return_value = {
-									result: result,
-									error: null
+									result: result
 								};
 								taskSequences[taskId].output = return_value;
 								cleanUp();
 							})
 							.catch(function processErrorAndCleanUp(err) {
 								return_value = {
-									result: null,
 									error: err
 								};
 								taskSequences[taskId].output = return_value;
 								cleanUp();
 							});
-
+					} else {
+						// synchronous task
+						taskSequences[taskId].output = return_value;
+						cleanUp();
 					}
 
 				};
