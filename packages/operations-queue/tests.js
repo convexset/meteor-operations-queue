@@ -105,6 +105,13 @@ function completionCallBack(name, test, data) {
 testAsyncMulti('[OperationsQueue] Completion, Precedences and Resource Feasibility', [
 
 	function(test, expect) {
+		if (!Meteor.isClient) {
+			(function() {
+				var _expect = expect;
+				expect = f => Meteor.bindEnvironment(_expect(f))
+			}());
+		}
+
 		var precedences = [];
 		var resourceAvailability = {
 			x: 2,

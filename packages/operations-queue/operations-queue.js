@@ -1,7 +1,35 @@
-/* global PackageUtilities: true */
 /* global OperationsQueue: true */
 
-OperationsQueue = (function(undefined) {
+(function(root, name, factory) {
+	if (typeof module === "object" && module.exports) {
+		// Node or CommonJS
+		module.exports = factory(require("underscore"));
+	} else {
+		// The Else Condition
+
+		if (typeof define === "function" && define.amd) {
+			// AMD... but why?
+			define(["underscore"], function(_) {
+				return factory(_);
+			});
+		}
+		
+		// Find the global object for export to both the browser and web workers.
+		var globalObject = (typeof window === 'object') && window ||
+			(typeof self === 'object') && self;
+
+		var thingie = factory(_);
+		root[name] = thingie;
+		if (!!globalObject) {
+			globalObject[name] = thingie;
+		}
+
+		// Poor Meteor
+		OperationsQueue = thingie;
+	}
+}(this, 'OperationsQueue', factoryOperationsQueue));
+
+function factoryOperationsQueue(_) {
 	'use strict';
 
 	var DEBUG_MODE = false;
@@ -53,7 +81,7 @@ OperationsQueue = (function(undefined) {
 	function OperationsQueue(options) {
 
 		// Default Options
-		options = PackageUtilities.updateDefaultOptionsWithInput({
+		options = _.extend({
 			// A dictionary of resources available for work
 			// Example: {tables: 2, chairs: 10}
 			availableResources: {},
@@ -203,7 +231,7 @@ OperationsQueue = (function(undefined) {
 
 			var taskId = taskOptions.name + " [" + fakeId() + "]";
 			taskOptions.id = taskId;
-			taskOptions.output = undefined;
+			delete taskOptions.output;
 
 			// Check taskOptions.taskDependencies
 			//  - type
@@ -539,4 +567,4 @@ OperationsQueue = (function(undefined) {
 	};
 
 	return OperationsQueue;
-})();
+};
