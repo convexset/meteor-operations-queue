@@ -1,0 +1,39 @@
+{
+  "name": "operations-queue",
+  "version": "0.2.2",
+  "description": "A task queue for sync. and async. tasks respecting resource use and precedence constraints.",
+  "main": "_compiled",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/convexset/operations-queue.git"
+  },
+  "bugs": {
+    "url": "https://github.com/convexset/meteor-operations-queue/issues"
+  },
+  "homepage": "https://github.com/convexset/meteor-operations-queue#readme",
+  "keywords": [
+    "task",
+    "asynchronous",
+    "queue",
+    "resource bound"
+  ],
+  "dependencies": {
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.9.0",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-stage-0": "^6.5.0",
+    "chai": "^3.5.0",
+    "isparta": "^4.0.0",
+    "mocha": "^2.4.5"
+  },
+  "scripts": {
+    "compile": "./clean.sh && babel src --out-dir _compiled/ --source-maps",
+    "prepublish": "npm run compile",
+    "test": "mocha --compilers js:babel-core/register --reporter spec",
+    "coverage": "./clean.sh && babel-node ./node_modules/.bin/isparta cover _mocha && open coverage/lcov-report/index.html"
+  },
+  "author": "Jeremy Chen <convexset@gmail.com> (https://github.com/convexset/)",
+  "license": "MIT"
+}

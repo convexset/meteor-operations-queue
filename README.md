@@ -28,18 +28,16 @@ This is probably easier to explain by example. Consider a "file uploader" where 
 
 ## Install
 
-### Meteor Package
-
-This is available as [`convexset:operations-queue`](https://atmospherejs.com/convexset/operations-queue) on [Atmosphere](https://atmospherejs.com/). (Install with `meteor add convexset:operations-queue`.)
-
 ### npm Package
 
-... also available as [`operations-queue`](https://www.npmjs.com/package/operations-queue) on [npm](https://www.npmjs.com/). (Install with `npm install operations-queue`.)
+This is available as [`operations-queue`](https://www.npmjs.com/package/operations-queue) on [npm](https://www.npmjs.com/). (Install with `npm install operations-queue`.)
 
 ## Usage By Example
 
 #### Constructor
 ```javascript
+const OperationsQueue = require("operations-queue");
+
 var opsQueue = new OperationsQueue({
     availableResources: {
         resource_a: 5,

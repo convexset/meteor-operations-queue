@@ -1,2 +1,4 @@
 .DS_Store
-*.sh
+node_modules
+_compiled
+coverage

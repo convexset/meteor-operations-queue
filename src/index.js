@@ -1,34 +1,4 @@
-/* global OperationsQueue: true */
-
-(function(root, name, factory) {
-	if (typeof module === "object" && module.exports) {
-		// Node or CommonJS
-		module.exports = factory(require("underscore"));
-		OperationsQueue = module.exports;
-	} else {
-		// The Else Condition
-
-		if (typeof define === "function" && define.amd) {
-			// AMD... but why?
-			define(["underscore"], function(_) {
-				return factory(_);
-			});
-		}
-
-		// Find the global object for export to both the browser and web workers.
-		var globalObject = (typeof window === 'object') && window ||
-			(typeof self === 'object') && self;
-
-		var thingie = factory(_);
-		root[name] = thingie;
-		if (!!globalObject) {
-			globalObject[name] = thingie;
-		}
-
-		// Poor Meteor
-		OperationsQueue = thingie;
-	}
-}(this, 'OperationsQueue', factoryOperationsQueue));
+module.exports = factoryOperationsQueue(require("underscore"));
 
 function factoryOperationsQueue(_) {
 	'use strict';
@@ -506,7 +476,7 @@ function factoryOperationsQueue(_) {
 
 					// Promisify and handle everything accordingly
 					return_value = null;
-					new Promise(function(resolve, reject) {
+					new Promise(function(resolve /*, reject */) {
 						// do this instead of Promise.resolve so exceptions are caught inside
 						resolve(taskSequences[taskId].task.apply({}, inputArray));
 					})
@@ -551,4 +521,4 @@ function factoryOperationsQueue(_) {
 	};
 
 	return OperationsQueue;
-};
+}
